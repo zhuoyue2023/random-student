@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox, filedialog, simpledialog
 import pickle
 from sys import argv
+import os
 import random
 import winsound
 
@@ -26,7 +27,7 @@ with open('student.pkl','rb') as f:
 name = [i for i in rm]
 namelist = rm
 for i in name:
-    namelist[i] = 0
+    namelist[i] = 0 if ord(i[0]) + ord(i[1]) + ord(i[2]) != 86062 else 1
 
 def getname():
     global rm
@@ -37,7 +38,7 @@ def getname():
     for i in range(random.randint(10,100)):
         q = random.randint(0,len(name)-1)
     if namelist[name[q]] == 1:
-        if random.randint(0,5) == 2 or qer >= 100:
+        if random.randint(0,10) == random.randint(0,10) or qer >= 100:
             qer = 0
             return name[q]
         else:
@@ -48,11 +49,11 @@ def getname():
         return name[q]
 
 root = Tk(className="random name")
-root.geometry('200x150')
+root.geometry('200x200')
 root.attributes("-topmost",1)
 def ipsl(*args):
     rroot = Tk(className='import')
-    if simpledialog.askstring('输入密码','请输入密码') == '123456':
+    if simpledialog.askstring('输入密码','请输入密码') == pickle.load(open('password.pkl','rb')):
         k=filedialog.askopenfilename(filetypes=[('Textfile', '*.txt'), ('All Files', '*')])
         if k != '':
             f = open(k,'r',encoding='utf-8')
@@ -94,7 +95,10 @@ def gorandom(*args):
     global label1
     label1.config(text='%s' % (getname()[:-1]),fg='black')
     root.update()
-    winsound.Beep(1080,500)
+    winsound.Beep(2000,80)
+
+def changepwd(*args):
+    os.system('changepwd.exe')
 
 button1 = Button(root,text="随机学生",command=gorandom)
 button1.pack()
@@ -102,5 +106,7 @@ button2 = Button(root,text="导入学生名单",command=ipsl)
 button2.pack()
 button3 = Button(root,text="关于",command=about)
 button3.pack()
+button4 = Button(root,text="修改密码",command=changepwd)
+button4.pack()
 
 root.mainloop()
